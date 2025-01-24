@@ -22,7 +22,9 @@ class UserRepository {
     }
     findByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.default.query('SELECT * FROM users WHERE email = $1', [email]);
+            const result = yield db_1.default.query('SELECT * FROM users WHERE email = $1', [
+                email,
+            ]);
             return result.rows[0] || null;
         });
     }

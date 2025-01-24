@@ -2,16 +2,16 @@ import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
 declare module 'express-serve-static-core' {
-
-    interface Request {
-  
-      user?: string | JwtPayload;
-  
-    }
-  
+  interface Request {
+    user?: string | JwtPayload;
   }
+}
 
-const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+const authMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void => {
   const token = req.headers.authorization?.split(' ')[1];
 
   if (!token) {
@@ -21,12 +21,10 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction): void =
 
   try {
     const secret = process.env.JWT_SECRET || 'your_jwt_secret';
-    console.log(secret, token);
     const decoded = jwt.verify(token, secret);
     req.user = decoded;
     next();
   } catch (err) {
-    console.log(err);
     res.status(401).json({ error: 'Invalid token' });
   }
 };

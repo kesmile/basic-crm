@@ -29,10 +29,12 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield userService_1.default.register(req.body);
         const { password } = user, userWithoutPassword = __rest(user, ["password"]);
-        res.status(201).json({ message: 'User registered successfully', user: userWithoutPassword });
+        res.status(201).json({
+            message: 'User registered successfully',
+            user: userWithoutPassword,
+        });
     }
     catch (error) {
-        console.log(error);
         res.status(500).json({ error: error.message });
     }
 });

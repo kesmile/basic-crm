@@ -17,7 +17,7 @@ export const getProjects = async (req: Request, res: Response) => {
       clientId ? Number(clientId) : undefined,
       name as string,
       Number(page),
-      Number(limit)
+      Number(limit),
     );
     res.status(200).json({ projects, total });
   } catch (err) {
@@ -25,12 +25,16 @@ export const getProjects = async (req: Request, res: Response) => {
   }
 };
 
-export const getProjectById = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
+export const getProjectById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const { id } = req.params;
     const project = await ProjectService.getProjectById(Number(id));
-    if (!project) { 
-      res.status(404).json({ error: 'Project not found' }); 
+    if (!project) {
+      res.status(404).json({ error: 'Project not found' });
       return;
     }
     res.status(200).json(project);
@@ -40,10 +44,17 @@ export const getProjectById = async (req: Request, res: Response, next: NextFunc
   }
 };
 
-export const updateProject = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const updateProject = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const { id } = req.params;
-    const updatedProject = await ProjectService.updateProject(Number(id), req.body);
+    const updatedProject = await ProjectService.updateProject(
+      Number(id),
+      req.body,
+    );
     if (!updatedProject) {
       res.status(404).json({ error: 'Project not found' });
       return;
@@ -55,15 +66,18 @@ export const updateProject = async (req: Request, res: Response, next: NextFunct
   }
 };
 
-export const deleteProject: RequestHandler = async (req: Request, res: Response): Promise<void> => {
+export const deleteProject: RequestHandler = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { id } = req.params;
     const deleted = await ProjectService.deleteProject(Number(id));
-    if (!deleted){
+    if (!deleted) {
       res.status(404).json({ error: 'Project not found' });
       return;
     }
-      
+
     res.status(200).json({ message: 'Project deleted successfully' });
   } catch (err) {
     res.status(500).json({ error: (err as Error).message });

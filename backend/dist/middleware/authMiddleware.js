@@ -13,13 +13,11 @@ const authMiddleware = (req, res, next) => {
     }
     try {
         const secret = process.env.JWT_SECRET || 'your_jwt_secret';
-        console.log(secret, token);
         const decoded = jsonwebtoken_1.default.verify(token, secret);
         req.user = decoded;
         next();
     }
     catch (err) {
-        console.log(err);
         res.status(401).json({ error: 'Invalid token' });
     }
 };

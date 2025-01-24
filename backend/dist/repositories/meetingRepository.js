@@ -14,14 +14,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../utils/db"));
 class MeetingRepository {
-    // Create a new meeting
     create(meeting) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.default.query('INSERT INTO meetings (project_id, title, date, time, notes) VALUES ($1, $2, $3, $4, $5) RETURNING *', [meeting.project_id, meeting.title, meeting.date, meeting.time, meeting.notes]);
+            const result = yield db_1.default.query('INSERT INTO meetings (project_id, title, date, time, notes) VALUES ($1, $2, $3, $4, $5) RETURNING *', [
+                meeting.project_id,
+                meeting.title,
+                meeting.date,
+                meeting.time,
+                meeting.notes,
+            ]);
             return result.rows[0];
         });
     }
-    // Get all meetings, optionally filtered by project_id
     findAll(projectId_1, title_1) {
         return __awaiter(this, arguments, void 0, function* (projectId, title, page = 1, limit = 10) {
             const offset = (page - 1) * limit;
@@ -50,24 +54,29 @@ class MeetingRepository {
             };
         });
     }
-    // Get a meeting by ID
     findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.default.query('SELECT * FROM meetings WHERE id = $1', [id]);
+            const result = yield db_1.default.query('SELECT * FROM meetings WHERE id = $1', [
+                id,
+            ]);
             return result.rows[0] || null;
         });
     }
-    // Update a meeting
     update(id, meeting) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.default.query(`UPDATE meetings 
-       SET title = $1, date = $2, time = $3, notes = $4, updated_at = CURRENT_TIMESTAMP 
-       WHERE id = $5 
-       RETURNING *`, [meeting.title, meeting.date, meeting.time, meeting.notes, id]);
+            const fields = Object.keys(meeting);
+            const values = Object.values(meeting);
+            if (fields.length === 0) {
+                throw new Error('No fields to update');
+            }
+            const setClause = fields
+                .map((field, index) => `${field} = $${index + 1}`)
+                .join(', ');
+            const query = `UPDATE meetings SET ${setClause}, updated_at = CURRENT_TIMESTAMP WHERE id = $${fields.length + 1} RETURNING *`;
+            const result = yield db_1.default.query(query, [...values, id]);
             return result.rows[0] || null;
         });
     }
-    // Delete a meeting
     delete(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield db_1.default.query('DELETE FROM meetings WHERE id = $1 RETURNING *', [id]);

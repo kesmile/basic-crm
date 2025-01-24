@@ -5,9 +5,11 @@ export const register = async (req: Request, res: Response) => {
   try {
     const user = await UserService.register(req.body);
     const { password, ...userWithoutPassword } = user;
-    res.status(201).json({ message: 'User registered successfully', user: userWithoutPassword });
+    res.status(201).json({
+      message: 'User registered successfully',
+      user: userWithoutPassword,
+    });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: (error as Error).message });
   }
 };

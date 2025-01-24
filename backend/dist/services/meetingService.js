@@ -21,7 +21,7 @@ class MeetingService {
     }
     getMeetings(projectId_1, title_1) {
         return __awaiter(this, arguments, void 0, function* (projectId, title, page = 1, limit = 10) {
-            return meetingRepository_1.default.findAll(projectId);
+            return meetingRepository_1.default.findAll(projectId, title, page, limit);
         });
     }
     getMeetingById(id) {

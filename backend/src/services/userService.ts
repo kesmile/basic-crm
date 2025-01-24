@@ -7,11 +7,9 @@ class UserService {
   private JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 
   async register(user: User): Promise<User> {
-    // Hash password
     const hashedPassword = await bcrypt.hash(user.password, 10);
     user.password = hashedPassword;
 
-    // Save user
     const newUser = await UserRepository.create(user);
     return newUser;
   }
@@ -20,16 +18,16 @@ class UserService {
     const user = await UserRepository.findByEmail(email);
     if (!user) throw new Error('Invalid credentials');
 
-    // Verify password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) throw new Error('Invalid credentials');
 
-    // Generate JWT
-    const token = jwt.sign({ id: user.id, role: user.role }, this.JWT_SECRET, { expiresIn: '1y' });
+    const token = jwt.sign({ id: user.id, role: user.role }, this.JWT_SECRET, {
+      expiresIn: '1y',
+    });
     return token;
   }
 
-  async verifyToken(token: string): Promise<any> {
+  async verifyToken(token: string): Promise<unknown> {
     return jwt.verify(token, this.JWT_SECRET);
   }
 }

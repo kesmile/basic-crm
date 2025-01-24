@@ -10,7 +10,7 @@ const swaggerOptions: Options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000', // Cambia el puerto si es necesario
+        url: 'http://localhost:3000',
         description: 'Development server',
       },
     ],
@@ -29,7 +29,7 @@ const swaggerOptions: Options = {
       },
     ],
   },
-  apis: ['./src/routes/*.ts'], // Ruta a los archivos donde definirás tus endpoints
+  apis: ['./src/routes/*.ts'],
 };
 
 export default swaggerOptions;

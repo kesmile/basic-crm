@@ -21,10 +21,8 @@ class UserService {
     }
     register(user) {
         return __awaiter(this, void 0, void 0, function* () {
-            // Hash password
             const hashedPassword = yield bcryptjs_1.default.hash(user.password, 10);
             user.password = hashedPassword;
-            // Save user
             const newUser = yield userRepository_1.default.create(user);
             return newUser;
         });
@@ -34,12 +32,12 @@ class UserService {
             const user = yield userRepository_1.default.findByEmail(email);
             if (!user)
                 throw new Error('Invalid credentials');
-            // Verify password
             const isPasswordValid = yield bcryptjs_1.default.compare(password, user.password);
             if (!isPasswordValid)
                 throw new Error('Invalid credentials');
-            // Generate JWT
-            const token = jsonwebtoken_1.default.sign({ id: user.id, role: user.role }, this.JWT_SECRET, { expiresIn: '1y' });
+            const token = jsonwebtoken_1.default.sign({ id: user.id, role: user.role }, this.JWT_SECRET, {
+                expiresIn: '1y',
+            });
             return token;
         });
     }

@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../utils/db"));
 class ProjectRepository {
-    // Create a new project
     create(project) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield db_1.default.query('INSERT INTO projects (client_id, name, description, status) VALUES ($1, $2, $3, $4) RETURNING *', [project.client_id, project.name, project.description, project.status]);
@@ -49,14 +48,14 @@ class ProjectRepository {
             };
         });
     }
-    // Get a project by ID
     findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.default.query('SELECT * FROM projects WHERE id = $1', [id]);
+            const result = yield db_1.default.query('SELECT * FROM projects WHERE id = $1', [
+                id,
+            ]);
             return result.rows[0] || null;
         });
     }
-    // Update a project
     update(id, project) {
         return __awaiter(this, void 0, void 0, function* () {
             const fields = Object.keys(project);
@@ -64,13 +63,14 @@ class ProjectRepository {
             if (fields.length === 0) {
                 throw new Error('No fields to update');
             }
-            const setClause = fields.map((field, index) => `${field} = $${index + 1}`).join(', ');
+            const setClause = fields
+                .map((field, index) => `${field} = $${index + 1}`)
+                .join(', ');
             const query = `UPDATE projects SET ${setClause}, updated_at = CURRENT_TIMESTAMP WHERE id = $${fields.length + 1} RETURNING *`;
             const result = yield db_1.default.query(query, [...values, id]);
             return result.rows[0] || null;
         });
     }
-    // Delete a project
     delete(id) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;

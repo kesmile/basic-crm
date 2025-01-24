@@ -6,7 +6,12 @@ class ProjectService {
     return ProjectRepository.create(project);
   }
 
-  async getProjects(clientId?: number, name?: string, page: number = 1, limit: number = 10): Promise<{ projects: Project[], total: number }> {
+  async getProjects(
+    clientId?: number,
+    name?: string,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ projects: Project[]; total: number }> {
     return ProjectRepository.findAll(clientId, name, page, limit);
   }
 
@@ -14,7 +19,10 @@ class ProjectService {
     return ProjectRepository.findById(id);
   }
 
-  async updateProject(id: number, project: Partial<Project>): Promise<Project | null> {
+  async updateProject(
+    id: number,
+    project: Partial<Project>,
+  ): Promise<Project | null> {
     return ProjectRepository.update(id, project);
   }
 

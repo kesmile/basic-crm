@@ -17,7 +17,7 @@ export const getMeetings = async (req: Request, res: Response) => {
       projectId ? Number(projectId) : undefined,
       title as string,
       Number(page),
-      Number(limit)
+      Number(limit),
     );
     res.status(200).json({ meetings, total });
   } catch (err) {
@@ -25,13 +25,17 @@ export const getMeetings = async (req: Request, res: Response) => {
   }
 };
 
-export const getMeetingById = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
+export const getMeetingById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const { id } = req.params;
     const meeting = await MeetingService.getMeetingById(Number(id));
-    if (!meeting){
-        res.status(404).json({ error: 'Meeting not found' });
-        return;
+    if (!meeting) {
+      res.status(404).json({ error: 'Meeting not found' });
+      return;
     }
     res.status(200).json(meeting);
   } catch (err) {
@@ -40,13 +44,20 @@ export const getMeetingById = async (req: Request, res: Response, next: NextFunc
   }
 };
 
-export const updateMeeting = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const updateMeeting = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const { id } = req.params;
-    const updatedMeeting = await MeetingService.updateMeeting(Number(id), req.body);
+    const updatedMeeting = await MeetingService.updateMeeting(
+      Number(id),
+      req.body,
+    );
     if (!updatedMeeting) {
-        res.status(404).json({ error: 'Meeting not found' });
-        return
+      res.status(404).json({ error: 'Meeting not found' });
+      return;
     }
     res.status(200).json(updatedMeeting);
   } catch (err) {
@@ -55,13 +66,16 @@ export const updateMeeting = async (req: Request, res: Response, next: NextFunct
   }
 };
 
-export const deleteMeeting: RequestHandler = async (req: Request, res: Response): Promise<void> => {
+export const deleteMeeting: RequestHandler = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { id } = req.params;
     const deleted = await MeetingService.deleteMeeting(Number(id));
-    if (!deleted){
-        res.status(404).json({ error: 'Meeting not found' });
-        return;
+    if (!deleted) {
+      res.status(404).json({ error: 'Meeting not found' });
+      return;
     }
     res.status(200).json({ message: 'Meeting deleted successfully' });
   } catch (err) {

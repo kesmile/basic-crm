@@ -14,14 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = __importDefault(require("../utils/db"));
 class ClientRepository {
-    // Create a new client
     create(client) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield db_1.default.query('INSERT INTO clients (name, email, phone, address) VALUES ($1, $2, $3, $4) RETURNING *', [client.name, client.email, client.phone, client.address]);
             return result.rows[0];
         });
     }
-    // Get clients with optional filtering, pagination
     findAll(filter, page, limit) {
         return __awaiter(this, void 0, void 0, function* () {
             const offset = (page - 1) * limit;
@@ -43,10 +41,11 @@ class ClientRepository {
             };
         });
     }
-    // Find a client by ID
     findById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.default.query('SELECT * FROM clients WHERE id = $1', [id]);
+            const result = yield db_1.default.query('SELECT * FROM clients WHERE id = $1', [
+                id,
+            ]);
             return result.rows[0] || null;
         });
     }
@@ -57,13 +56,14 @@ class ClientRepository {
             if (fields.length === 0) {
                 throw new Error('No fields to update');
             }
-            const setClause = fields.map((field, index) => `${field} = $${index + 1}`).join(', ');
+            const setClause = fields
+                .map((field, index) => `${field} = $${index + 1}`)
+                .join(', ');
             const query = `UPDATE clients SET ${setClause} WHERE id = $${fields.length + 1} RETURNING *`;
             const result = yield db_1.default.query(query, [...values, id]);
             return result.rows[0] || null;
         });
     }
-    // Delete a client
     delete(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield db_1.default.query('DELETE FROM clients WHERE id = $1 RETURNING *', [id]);

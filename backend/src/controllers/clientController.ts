@@ -18,7 +18,7 @@ export const getClients = async (req: Request, res: Response) => {
     const { clients, total } = await ClientService.getClients(
       { name: name as string },
       Number(page),
-      Number(limit)
+      Number(limit),
     );
     res.status(200).json({ clients, total });
   } catch (err) {
@@ -26,16 +26,20 @@ export const getClients = async (req: Request, res: Response) => {
   }
 };
 
-export const updateClient = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const updateClient = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const { id } = req.params;
     const client = req.body;
     const updatedClient = await ClientService.updateClient(Number(id), client);
-    if (!updatedClient){
+    if (!updatedClient) {
       res.status(404).json({ error: 'Client not found' });
       return;
-    } 
-      
+    }
+
     res.status(200).json(updatedClient);
   } catch (err) {
     res.status(500).json({ error: (err as Error).message });
@@ -43,9 +47,10 @@ export const updateClient = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-
-
-export const deleteClient: RequestHandler = async (req: Request, res: Response): Promise<void> => {
+export const deleteClient: RequestHandler = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { id } = req.params;
     const deleted = await ClientService.deleteClient(Number(id));

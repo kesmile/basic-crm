@@ -18,21 +18,18 @@ class ClientService {
     createClient(client) {
         return __awaiter(this, void 0, void 0, function* () {
             const newClient = yield clientRepository_1.default.create(client);
-            redisClient_1.default.del('clients'); // Invalidate cache
+            redisClient_1.default.del('clients');
             return newClient;
         });
     }
     getClients(filter, page, limit) {
         return __awaiter(this, void 0, void 0, function* () {
-            // Check cache
-            // const cachedClients = await redisClient.get('clients');
-            // if (cachedClients) {
-            //   return JSON.parse(cachedClients);
-            // }
-            // Fetch from DB
+            const cachedClients = yield redisClient_1.default.get('clients');
+            if (cachedClients) {
+                return JSON.parse(cachedClients);
+            }
             const clients = yield clientRepository_1.default.findAll(filter, page, limit);
-            // Cache the result
-            redisClient_1.default.set('clients', JSON.stringify(clients), { EX: 300 }); // Cache for 5 minutes
+            redisClient_1.default.set('clients', JSON.stringify(clients), { EX: 300 });
             return clients;
         });
     }
@@ -40,7 +37,7 @@ class ClientService {
         return __awaiter(this, void 0, void 0, function* () {
             const updatedClient = yield clientRepository_1.default.update(id, client);
             if (updatedClient)
-                redisClient_1.default.del('clients'); // Invalidate cache
+                redisClient_1.default.del('clients');
             return updatedClient;
         });
     }
@@ -48,7 +45,7 @@ class ClientService {
         return __awaiter(this, void 0, void 0, function* () {
             const deleted = yield clientRepository_1.default.delete(id);
             if (deleted)
-                redisClient_1.default.del('clients'); // Invalidate cache
+                redisClient_1.default.del('clients');
             return deleted;
         });
     }
