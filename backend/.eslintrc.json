@@ -1,0 +1,23 @@
+{
+    "env": {
+      "browser": true,
+      "es2021": true,
+      "node": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:prettier/recommended" // Integra Prettier con ESLint
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": 12,
+      "sourceType": "module"
+    },
+    "plugins": ["@typescript-eslint", "prettier"],
+    "rules": {
+      "prettier/prettier": "error", // Muestra errores si Prettier no se cumple
+      "@typescript-eslint/no-unused-vars": "warn", // Ejemplo de regla específica de TypeScript
+      "no-console": "warn" // Ejemplo de regla general de ESLint
+    }
+  }
