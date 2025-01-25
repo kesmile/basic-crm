@@ -1,7 +1,7 @@
 import ContactRepository from '../repositories/contactRepository';
 import { Contact } from '../models/contactModel';
 
-class ContactService {
+export class ContactService {
   async createContact(contact: Contact): Promise<Contact> {
     return ContactRepository.create(contact);
   }

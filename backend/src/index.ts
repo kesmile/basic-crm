@@ -10,6 +10,7 @@ import projectRoutes from './routes/projectRoutes';
 import authMiddleware from './middleware/authMiddleware';
 import meetingRoutes from './routes/meetingRoutes';
 import contactRoutes from './routes/contactRoutes';
+import meetingContactRoutes from './routes/meetingContactRoutes';
 
 dotenv.config();
 
@@ -31,8 +32,11 @@ app.use('/api/auth', authRoutes);
 app.use('/api/projects', authMiddleware, projectRoutes);
 app.use('/api/meetings', authMiddleware, meetingRoutes);
 app.use('/api/contacts', authMiddleware, contactRoutes);
+app.use('/api/meeting-contacts', authMiddleware, meetingContactRoutes);
 
 app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
-  console.log(`Swagger docs available at http://localhost:${port}/api-docs`);
+  //console.log(`[server]: Server is running at http://localhost:${port}`);
+  //console.log(`Swagger docs available at http://localhost:${port}/api-docs`);
 });
+
+export { app };
