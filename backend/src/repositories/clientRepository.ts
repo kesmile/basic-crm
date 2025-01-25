@@ -11,29 +11,26 @@ class ClientRepository {
   }
 
   async findAll(
-    filter: { name?: string },
     page: number,
     limit: number,
+    name?: string,
   ): Promise<{ clients: Client[]; total: number }> {
     const offset = (page - 1) * limit;
     let query = `SELECT * FROM clients`;
     let totalQuery = `SELECT COUNT(*) FROM clients`;
     const values: unknown[] = [];
 
-    if (filter.name) {
+    if (name) {
       query += ` WHERE name ILIKE $1`;
       totalQuery += ` WHERE name ILIKE $1`;
-      values.push(`%${filter.name}%`);
+      values.push(`%${name}%`);
     }
 
     query += ` LIMIT $${values.length + 1} OFFSET $${values.length + 2}`;
     values.push(limit, offset);
 
     const result = await pool.query(query, values);
-    const totalResult = await pool.query(
-      totalQuery,
-      filter.name ? [`%${filter.name}%`] : [],
-    );
+    const totalResult = await pool.query(totalQuery, name ? [`%${name}%`] : []);
 
     return {
       clients: result.rows,

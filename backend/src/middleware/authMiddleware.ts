@@ -20,11 +20,11 @@ const authMiddleware = (
   }
 
   try {
-    const secret = process.env.JWT_SECRET || 'your_jwt_secret';
+    const secret = process.env.JWT_SECRET || 'secret';
     const decoded = jwt.verify(token, secret);
     req.user = decoded;
     next();
-  } catch (err) {
+  } catch {
     res.status(401).json({ error: 'Invalid token' });
   }
 };

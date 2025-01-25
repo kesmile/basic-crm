@@ -16,9 +16,9 @@ export const getClients = async (req: Request, res: Response) => {
   try {
     const { page = 1, limit = 10, name } = req.query;
     const { clients, total } = await ClientService.getClients(
-      { name: name as string },
       Number(page),
       Number(limit),
+      name as string,
     );
     res.status(200).json({ clients, total });
   } catch (err) {

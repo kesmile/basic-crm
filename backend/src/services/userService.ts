@@ -4,7 +4,7 @@ import UserRepository from '../repositories/userRepository';
 import { User } from '../models/userModel';
 
 class UserService {
-  private JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
+  private JWT_SECRET = process.env.JWT_SECRET || 'secret';
 
   async register(user: User): Promise<User> {
     const hashedPassword = await bcrypt.hash(user.password, 10);
