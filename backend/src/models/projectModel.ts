@@ -4,6 +4,7 @@ export interface Project {
   name: string;
   description?: string;
   status?: string;
+  clientName?: string;
   created_at?: Date;
   updated_at?: Date;
 }

@@ -26,6 +26,20 @@ export const getClients = async (req: Request, res: Response) => {
   }
 };
 
+export const getClientById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const client = await ClientService.getClientById(Number(id));
+    if (!client) {
+      res.status(404).json({ error: 'Client not found' });
+    } else {
+      res.status(200).json(client);
+    }
+  } catch (err) {
+    res.status(500).json({ error: (err as Error).message });
+  }
+};
+
 export const updateClient = async (
   req: Request,
   res: Response,

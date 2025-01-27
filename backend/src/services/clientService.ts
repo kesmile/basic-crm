@@ -14,15 +14,19 @@ class ClientService {
     limit: number,
     name?: string,
   ): Promise<{ clients: Client[]; total: number }> {
-    const cachedClients = await redisClient.get('clients');
-    if (cachedClients) {
-      return JSON.parse(cachedClients);
-    }
+    // const cachedClients = await redisClient.get('clients');
+    // if (cachedClients) {
+    //   return JSON.parse(cachedClients);
+    // }
 
     const clients = await ClientRepository.findAll(page, limit, name);
 
     redisClient.set('clients', JSON.stringify(clients), { EX: 300 });
     return clients;
+  }
+
+  async getClientById(id: number): Promise<Client | null> {
+    return ClientRepository.findById(id);
   }
 
   async updateClient(

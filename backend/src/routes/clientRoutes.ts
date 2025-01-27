@@ -4,6 +4,7 @@ import {
   getClients,
   updateClient,
   deleteClient,
+  getClientById,
 } from '../controllers/clientController';
 
 const router = Router();
@@ -137,6 +138,51 @@ router.post('/', createClient);
  *                   example: Access denied, token missing
  */
 router.get('/', getClients);
+/**
+ * @swagger
+ * /api/clients/{id}:
+ *   get:
+ *     summary: Get a client by ID
+ *     tags: [Clients]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The client ID
+ *     responses:
+ *       200:
+ *         description: A client object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 name:
+ *                   type: string
+ *                   example: John Doe
+ *                 email:
+ *                   type: string
+ *                   example: johndoe@example.com
+ *                 phone:
+ *                   type: string
+ *                   example: 123-456-7890
+ *                 address:
+ *                   type: string
+ *                   example: 123 Main St, Anytown, USA
+ *       404:
+ *         description: Client not found
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/:id', getClientById);
+
 /**
  * @swagger
  * /api/clients/{id}:

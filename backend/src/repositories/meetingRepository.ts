@@ -23,21 +23,29 @@ class MeetingRepository {
     limit: number = 10,
   ): Promise<{ meetings: Meeting[]; total: number }> {
     const offset = (page - 1) * limit;
-    let query = `SELECT * FROM meetings`;
-    let totalQuery = `SELECT COUNT(*) FROM meetings`;
+    let query = `
+      SELECT meetings.*, projects.name as project_name
+      FROM meetings
+      JOIN projects ON meetings.project_id = projects.id
+    `;
+    let totalQuery = `
+      SELECT COUNT(*)
+      FROM meetings
+      JOIN projects ON meetings.project_id = projects.id
+    `;
     const values: unknown[] = [];
 
     if (projectId) {
-      query += ` WHERE project_id = $1`;
-      totalQuery += ` WHERE project_id = $1`;
+      query += ` WHERE meetings.project_id = $1`;
+      totalQuery += ` WHERE meetings.project_id = $1`;
       values.push(projectId);
     }
 
     if (title) {
       query += projectId ? ` AND` : ` WHERE`;
-      query += ` title ILIKE $${values.length + 1}`;
+      query += ` meetings.title ILIKE $${values.length + 1}`;
       totalQuery += projectId ? ` AND` : ` WHERE`;
-      totalQuery += ` title ILIKE $${values.length + 1}`;
+      totalQuery += ` meetings.title ILIKE $${values.length + 1}`;
       values.push(`%${title}%`);
     }
 
@@ -57,9 +65,15 @@ class MeetingRepository {
   }
 
   async findById(id: number): Promise<Meeting | null> {
-    const result = await pool.query('SELECT * FROM meetings WHERE id = $1', [
-      id,
-    ]);
+    const result = await pool.query(
+      `
+      SELECT meetings.*, projects.name as project_name
+      FROM meetings
+      JOIN projects ON meetings.project_id = projects.id
+      WHERE meetings.id = $1
+    `,
+      [id],
+    );
     return result.rows[0] || null;
   }
 

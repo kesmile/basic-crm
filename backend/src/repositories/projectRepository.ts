@@ -16,21 +16,29 @@ class ProjectRepository {
     limit: number = 10,
   ): Promise<{ projects: Project[]; total: number }> {
     const offset = (page - 1) * limit;
-    let query = `SELECT * FROM projects`;
-    let totalQuery = `SELECT COUNT(*) FROM projects`;
+    let query = `
+      SELECT projects.*, clients.name as clientName
+      FROM projects
+      JOIN clients ON projects.client_id = clients.id
+    `;
+    let totalQuery = `
+      SELECT COUNT(*)
+      FROM projects
+      JOIN clients ON projects.client_id = clients.id
+    `;
     const values: unknown[] = [];
 
     if (clientId) {
-      query += ` WHERE client_id = $1`;
-      totalQuery += ` WHERE client_id = $1`;
+      query += ` WHERE projects.client_id = $1`;
+      totalQuery += ` WHERE projects.client_id = $1`;
       values.push(clientId);
     }
 
     if (name) {
       query += clientId ? ` AND` : ` WHERE`;
-      query += ` name ILIKE $${values.length + 1}`;
+      query += ` projects.name ILIKE $${values.length + 1}`;
       totalQuery += clientId ? ` AND` : ` WHERE`;
-      totalQuery += ` name ILIKE $${values.length + 1}`;
+      totalQuery += ` projects.name ILIKE $${values.length + 1}`;
       values.push(`%${name}%`);
     }
 
